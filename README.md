@@ -17,10 +17,11 @@ A lightweight FastAPI-based backend project designed for learning, experimenting
 
 ```
 FastAPI/
-│── main.py               # FastAPI application
-│── patient.json          # Patient database (JSON file)
-│── myvenv/               # Virtual environment (ignored in git)
-│── requirements.txt      # Project dependencies
+│── main.py
+│── patient.json
+│── README.md
+│── requirements.txt
+│── .gitignore
 ```
 
 ---
