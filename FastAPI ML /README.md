@@ -25,12 +25,12 @@ This application uses a **Random Forest Classifier** to predict insurance premiu
 ```
 FastAPI ML/
 │
-├── app.py                    # FastAPI backend application
-├── frontend.py               # Streamlit frontend interface
-├── ML_Model.ipynb           # Model training notebook
-├── model.pkl                # Trained Random Forest model
-├── insurance.csv            # Training dataset (100 samples)
-└── README.md                # This file
+├── app.py
+├── frontend.py
+├── ML_Model.ipynb
+├── model.pkl
+├── insurance.csv
+└── README.md
 ```
 
 ---
