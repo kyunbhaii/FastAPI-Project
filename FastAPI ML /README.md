@@ -25,11 +25,22 @@ This application uses a **Random Forest Classifier** to predict insurance premiu
 ```
 FastAPI ML/
 │
+├── config/
+│   └── city_tier.py
+│
+├── model/
+│   ├── model.pkl
+│   └── predict.py
+│
+├── schema/
+│   ├── user_input.py
+│   └── prediction_response.py
+│
 ├── app.py
 ├── frontend.py
 ├── ML_Model.ipynb
-├── model.pkl
 ├── insurance.csv
+├── requirements.txt
 └── README.md
 ```
 
@@ -38,11 +49,14 @@ FastAPI ML/
 ## Features
 
 ### Backend (FastAPI)
-- RESTful `/predict` endpoint
+- RESTful `/predict` endpoint with response model validation
+- `/health` endpoint for health checks and model status
 - Automatic API documentation (Swagger UI)
-- Data validation with Pydantic
-- Computed fields for feature engineering
-- JSON response with predictions
+- Data validation with Pydantic models
+- Computed fields for automatic feature engineering
+- Structured response with prediction confidence and class probabilities
+- Model versioning support
+- Organized code structure with separate modules
 
 ### Frontend (Streamlit)
 - Interactive user interface
@@ -83,7 +97,12 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 ### 3. Install dependencies
 ```bash
-pip install fastapi uvicorn streamlit pandas scikit-learn pydantic requests
+pip install -r requirements.txt
+```
+
+Or install manually:
+```bash
+pip install fastapi==0.121.0 uvicorn==0.38.0 streamlit==1.52.0 pandas==2.3.0 scikit-learn==1.7.0 pydantic==2.12.3 requests==2.32.4
 ```
 
 ---
@@ -116,6 +135,20 @@ The Streamlit app will open automatically in your browser at:
 
 ## API Documentation
 
+### Health Check Endpoint
+```http
+GET /health
+```
+
+**Response:**
+```json
+{
+  "status": "ok",
+  "version": "1.0.0",
+  "model_loaded": true
+}
+```
+
 ### Prediction Endpoint
 ```http
 POST /predict
@@ -137,7 +170,13 @@ POST /predict
 **Response:**
 ```json
 {
-  "predicted_category": "Low"
+  "predicted_category": "Low",
+  "confidence": 0.8432,
+  "class_probabilities": {
+    "Low": 0.8432,
+    "Medium": 0.1234,
+    "High": 0.0334
+  }
 }
 ```
 
@@ -230,6 +269,16 @@ print(f"Predicted Category: {result['predicted_category']}")
 5. **Income (LPA)**: Numerical
 6. **Occupation**: Categorical
 
+### City Tier Classification
+
+**Tier 1 Cities:**
+Mumbai, Delhi, Bangalore, Chennai, Kolkata, Hyderabad, Pune
+
+**Tier 2 Cities:**
+Jaipur, Chandigarh, Indore, Lucknow, Patna, Ranchi, Visakhapatnam, Coimbatore, Bhopal, Nagpur, Vadodara, Surat, Rajkot, Jodhpur, Raipur, Amritsar, Varanasi, Agra, Dehradun, Mysore, Jabalpur, Guwahati, Thiruvananthapuram, Ludhiana, Nashik, Allahabad, Udaipur, Aurangabad, Hubli, Belgaum, Salem, Vijayawada, Tiruchirappalli, Bhavnagar, Gwalior, Dhanbad, Bareilly, Aligarh, Gaya, Kozhikode, Warangal, Kolhapur, Bilaspur, Jalandhar, Noida, Guntur, Asansol, Siliguri
+
+**Tier 3 Cities:** All other cities
+
 ### Performance Metrics
 - **Accuracy**: 90% on test set
 - **Test Split**: 80/20 train-test split
@@ -296,6 +345,25 @@ jupyter notebook ML_Model.ipynb
 
 ## Technical Implementation
 
+### Project Architecture
+
+The project follows a modular architecture with clear separation of concerns:
+
+**config/** - Configuration files
+- `city_tier.py`: Contains tier 1 and tier 2 city lists for classification
+
+**model/** - Machine learning model and prediction logic
+- `model.pkl`: Serialized Random Forest model
+- `predict.py`: Model loading and prediction function with confidence scores
+
+**schema/** - Pydantic models for data validation
+- `user_input.py`: Input validation with computed fields for feature engineering
+- `prediction_response.py`: Response model with prediction details
+
+**app.py** - FastAPI application with route handlers
+
+**frontend.py** - Streamlit UI for user interaction
+
 ### Pydantic Model with Computed Fields
 
 The API uses Pydantic's `@computed_field` decorator for automatic feature engineering:
@@ -317,7 +385,27 @@ def lifestyle_risk(self) -> str:
         return "low"
 ```
 
-This ensures that features are consistently computed for both training and prediction.
+The `user_input.py` also includes field validators:
+
+```python
+@field_validator('city')
+@classmethod
+def normalize_city(cls, v: str) -> str:
+    return v.strip().title()
+```
+
+This ensures that features are consistently computed for both training and prediction, and city names are normalized.
+
+### Response Model
+
+The API returns structured responses with confidence scores:
+
+```python
+class PredictionResponse(BaseModel):
+    predicted_category: str
+    confidence: float
+    class_probabilities: Dict[str, float]
+```
 
 ---
 
@@ -327,8 +415,9 @@ This ensures that features are consistently computed for both training and predi
 
 **Backend won't start:**
 - Check if port 8000 is already in use
-- Verify `model.pkl` file exists in the directory
+- Verify `model/model.pkl` file exists in the directory
 - Ensure all dependencies are installed
+- Check that all required folders (config, model, schema) are present
 
 **Frontend can't connect to backend:**
 - Ensure backend is running on port 8000
@@ -348,19 +437,24 @@ This ensures that features are consistently computed for both training and predi
 
 ## Dependencies
 
+From `requirements.txt`:
 ```txt
-fastapi
-uvicorn[standard]
-streamlit
-pydantic
-pandas
-scikit-learn
-requests
+fastapi==0.121.0
+uvicorn==0.38.0
+starlette==0.49.3
+
+pydantic==2.12.3
+pandas==2.3.0
+numpy==2.2.6
+scikit-learn==1.7.0
+
+streamlit==1.52.0
+requests==2.32.4
 ```
 
 Install all at once:
 ```bash
-pip install fastapi uvicorn[standard] streamlit pydantic pandas scikit-learn requests
+pip install -r requirements.txt
 ```
 
 ---
@@ -377,18 +471,6 @@ pip install fastapi uvicorn[standard] streamlit pydantic pandas scikit-learn req
 - Add data visualization in frontend
 - Create Docker containers for easy deployment
 - Add unit and integration tests
-
----
-
-## Contributing
-
-Contributions are welcome! To contribute:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
 
 ---
 
@@ -409,6 +491,8 @@ This project was built as a learning exercise using resources from:
 - Building interactive frontends with Streamlit
 - Model serialization and deployment
 - Full-stack application development
+- Project organization with modular architecture
+- Response models with confidence scores and probabilities
 
 ---
 
@@ -421,5 +505,9 @@ This project is part of the FastAPI-Project repository and is available under th
 ## Acknowledgments
 
 - **CampusX** for the excellent FastAPI tutorials
+
+---
+
+**If you find this project helpful, please star the main repository!**
 
 [← Back to Main Repository](https://github.com/kyunbhaii/FastAPI-Project)
