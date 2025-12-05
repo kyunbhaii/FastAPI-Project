@@ -41,17 +41,20 @@ A full-stack ML application combining FastAPI backend with Streamlit frontend fo
 ```
 FastAPI-Project/
 │
-├── FastAPI ML/              # ML model serving application
-│   ├── backend/            # FastAPI backend service
-│   ├── frontend/           # Streamlit frontend interface
-│   └── models/             # Trained ML models
+FastAPI ML/
+│    ├── app.py
+│    ├── frontend.py
+│    ├── ML_Model.ipynb
+│    ├── model.pkl
+│    ├── insurance.csv
+│    └── README.md
 │
-├── main.py                 # Patient management API
-├── patients.json           # Patient data storage
-├── requirements.txt        # Project dependencies
-├── README.md              # This file
-├── LICENSE                # MIT License
-└── .gitignore             # Git ignore rules
+├── main.py
+├── patients.json
+├── requirements.txt
+├── README.md
+├── LICENSE
+└── .gitignore
 ```
 
 ---
@@ -314,7 +317,3 @@ This project is open-source and available under the [MIT License](LICENSE).
 ## Acknowledgments
 
 - **CampusX** - Special thanks for the excellent [FastAPI Tutorial Playlist](https://youtube.com/playlist?list=PLKnIA16_RmvZ41tjbKB2ZnwchfniNsMuQ&si=awwdccJ3-P_NfSQz) that made this project possible
-
----
-
-**⭐ If you find this project helpful, please consider giving it a star!**
