@@ -422,4 +422,4 @@ This project is part of the FastAPI-Project repository and is available under th
 
 - **CampusX** for the excellent FastAPI tutorials
 
-[← Back to Main Repository]([https://github.com/kyunbhaii/FastAPI-Project/blob/main/README.md](https://github.com/kyunbhaii/FastAPI-Project/tree/main))
+[← Back to Main Repository](https://github.com/kyunbhaii/FastAPI-Project)
