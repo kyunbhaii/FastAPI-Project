@@ -494,19 +494,13 @@ This project was built as a learning exercise using resources from:
 - Project organization with modular architecture
 - Response models with confidence scores and probabilities
 
----
-
 ## License
 
 This project is part of the FastAPI-Project repository and is available under the MIT License.
 
----
-
 ## Acknowledgments
 
 - **CampusX** for the excellent FastAPI tutorials
-
----
 
 **If you find this project helpful, please star the main repository!**
 
