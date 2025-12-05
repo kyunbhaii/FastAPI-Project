@@ -230,16 +230,6 @@ print(f"Predicted Category: {result['predicted_category']}")
 5. **Income (LPA)**: Numerical
 6. **Occupation**: Categorical
 
-### City Tier Classification
-
-**Tier 1 Cities:**
-Mumbai, Delhi, Bangalore, Chennai, Kolkata, Hyderabad, Pune
-
-**Tier 2 Cities:**
-Jaipur, Chandigarh, Indore, Lucknow, Patna, Ranchi, Visakhapatnam, Coimbatore, Bhopal, Nagpur, Vadodara, Surat, Rajkot, Jodhpur, Raipur, Amritsar, Varanasi, Agra, Dehradun, Mysore, Jabalpur, Guwahati, Thiruvananthapuram, Ludhiana, Nashik, Allahabad, Udaipur, Aurangabad, Hubli, Belgaum, Salem, Vijayawada, Tiruchirappalli, Bhavnagar, Gwalior, Dhanbad, Bareilly, Aligarh, Gaya, Kozhikode, Warangal, Kolhapur, Bilaspur, Jalandhar, Noida, Guntur, Asansol, Siliguri
-
-**Tier 3 Cities:** All other cities
-
 ### Performance Metrics
 - **Accuracy**: 90% on test set
 - **Test Split**: 80/20 train-test split
