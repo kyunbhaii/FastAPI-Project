@@ -26,22 +26,23 @@ This application uses a **Random Forest Classifier** to predict insurance premiu
 FastAPI ML/
 │
 ├── config/
-│   └── city_tier.py
+│   └── city_tier.py          # City tier classification lists
 │
 ├── model/
-│   ├── model.pkl
-│   └── predict.py
+│   ├── model.pkl             # Trained Random Forest model
+│   └── predict.py            # Prediction logic and model loading
 │
 ├── schema/
-│   ├── user_input.py
-│   └── prediction_response.py
+│   ├── user_input.py         # Pydantic model for input validation
+│   └── prediction_response.py # Pydantic model for API response
 │
-├── app.py
-├── frontend.py
-├── ML_Model.ipynb
-├── insurance.csv
-├── requirements.txt
-└── README.md
+├── app.py                    # FastAPI application entry point
+├── frontend.py               # Streamlit frontend interface
+├── Dockerfile                # Docker configuration for containerization
+├── ML_Model.ipynb           # Model training notebook
+├── insurance.csv            # Training dataset (100 samples)
+├── requirements.txt         # Project dependencies
+└── README.md                # This file
 ```
 
 ---
@@ -109,9 +110,11 @@ pip install fastapi==0.121.0 uvicorn==0.38.0 streamlit==1.52.0 pandas==2.3.0 sci
 
 ## Running the Application
 
+### Option 1: Running Locally
+
 You need to run both the backend and frontend services. Open **two terminal windows**:
 
-### Terminal 1: Start the FastAPI Backend
+#### Terminal 1: Start the FastAPI Backend
 
 ```bash
 uvicorn app:app --reload --host 127.0.0.1 --port 8000
@@ -122,7 +125,7 @@ The API will be available at:
 - **Swagger UI**: http://127.0.0.1:8000/docs
 - **Prediction Endpoint**: http://127.0.0.1:8000/predict
 
-### Terminal 2: Start the Streamlit Frontend
+#### Terminal 2: Start the Streamlit Frontend
 
 ```bash
 streamlit run frontend.py
@@ -130,6 +133,54 @@ streamlit run frontend.py
 
 The Streamlit app will open automatically in your browser at:
 - **Frontend**: http://localhost:8501
+
+---
+
+### Option 2: Running with Docker
+
+#### Build the Docker Image
+
+```bash
+docker build -t fastapi-insurance-predictor .
+```
+
+#### Run the Docker Container
+
+```bash
+docker run -p 8000:8000 fastapi-insurance-predictor
+```
+
+The API will be available at:
+- **API Base**: http://0.0.0.0:8000
+- **Swagger UI**: http://0.0.0.0:8000/docs
+- **Prediction Endpoint**: http://0.0.0.0:8000/predict
+
+**Note**: The Docker container only runs the FastAPI backend. To use the Streamlit frontend with Docker:
+
+1. Keep the Docker container running
+2. In a separate terminal, run the frontend locally:
+   ```bash
+   streamlit run frontend.py
+   ```
+3. Update the `API_URL` in `frontend.py` if needed to point to `http://0.0.0.0:8000/predict`
+
+#### Docker Container Management
+
+**Stop the container:**
+```bash
+docker ps  # Find the container ID
+docker stop <container_id>
+```
+
+**Remove the container:**
+```bash
+docker rm <container_id>
+```
+
+**Remove the image:**
+```bash
+docker rmi fastapi-insurance-predictor
+```
 
 ---
 
@@ -433,6 +484,12 @@ class PredictionResponse(BaseModel):
 - Check that city and occupation values are valid
 - Ensure numeric values are within acceptable ranges
 
+**Docker-related issues:**
+- **Port already in use**: If port 8000 is busy, stop other services or change the port mapping: `docker run -p 8080:8000 fastapi-insurance-predictor`
+- **Build fails**: Ensure you're in the correct directory with the Dockerfile
+- **Container exits immediately**: Check logs with `docker logs <container_id>`
+- **Cannot connect to API**: Make sure you're using `0.0.0.0` or `localhost` and the correct port
+
 ---
 
 ## Dependencies
@@ -469,8 +526,22 @@ pip install -r requirements.txt
 - Add more features (medical history, family history)
 - Implement A/B testing for model improvements
 - Add data visualization in frontend
-- Create Docker containers for easy deployment
+- Docker Compose for running both backend and frontend together
 - Add unit and integration tests
+- Implement CI/CD pipeline with GitHub Actions
+- Add monitoring and logging (Prometheus, Grafana)
+
+---
+
+## Contributing
+
+Contributions are welcome! To contribute:
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
 ---
 
@@ -493,6 +564,9 @@ This project was built as a learning exercise using resources from:
 - Full-stack application development
 - Project organization with modular architecture
 - Response models with confidence scores and probabilities
+- Docker containerization for consistent deployment environments
+
+---
 
 ## License
 
@@ -501,7 +575,5 @@ This project is part of the FastAPI-Project repository and is available under th
 ## Acknowledgments
 
 - **CampusX** for the excellent FastAPI tutorials
-
-**If you find this project helpful, please star the main repository!**
 
 [← Back to Main Repository](https://github.com/kyunbhaii/FastAPI-Project)
