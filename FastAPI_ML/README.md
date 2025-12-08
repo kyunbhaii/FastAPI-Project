@@ -26,23 +26,25 @@ This application uses a **Random Forest Classifier** to predict insurance premiu
 FastAPI ML/
 │
 ├── config/
-│   └── city_tier.py          # City tier classification lists
+│   └── city_tier.py
 │
 ├── model/
-│   ├── model.pkl             # Trained Random Forest model
-│   └── predict.py            # Prediction logic and model loading
+│   ├── model.pkl
+│   └── predict.py
 │
 ├── schema/
-│   ├── user_input.py         # Pydantic model for input validation
-│   └── prediction_response.py # Pydantic model for API response
+│   ├── user_input.py
+│   └── prediction_response.py
 │
-├── app.py                    # FastAPI application entry point
-├── frontend.py               # Streamlit frontend interface
-├── Dockerfile                # Docker configuration for containerization
-├── ML_Model.ipynb           # Model training notebook
-├── insurance.csv            # Training dataset (100 samples)
-├── requirements.txt         # Project dependencies
-└── README.md                # This file
+├── app.py
+├── frontend.py
+├── Dockerfile
+├── Dockerfile-slim
+├── ML_Model.ipynb
+├── insurance.csv
+├── .env
+├── requirements.txt
+└── README.md
 ```
 
 ---
