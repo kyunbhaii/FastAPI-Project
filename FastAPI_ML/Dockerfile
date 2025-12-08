@@ -1,25 +1,30 @@
-# Choose the base Python environment the container will use.
-# This image includes Python 3.10 with a lightweight Debian system (slim),
-# which keeps the Docker image small and suitable for production.
+# Use a small, production-friendly Python base image.
 FROM python:3.10-slim
 
-# Set the working directory inside the container.
-# All commands after this will run inside /app and all file copies will be placed here.
+# Set working directory inside container.
 WORKDIR /app
 
-# Copy all project files from the local machine into the /app directory inside the container.
-# This includes Python files, model files, requirements.txt, and any additional resources.
-COPY . /app
+# ----------------------------
+# 1. Copy only requirements first
+# This helps Docker cache the dependency layer.¯
+# ----------------------------
+COPY requirements.txt .
 
-# Install all Python dependencies listed in requirements.txt.
-# --no-cache-dir prevents pip from storing cache, keeping the image size smaller.
+# Install dependencies.
+# This layer will be reused unless requirements.txt changes.
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Document that the application inside the container will listen on port 8000.
-# This does NOT expose the port externally; that happens when running the container using -p.
+# ----------------------------
+# 2. Now copy the rest of the application code
+# This layer changes frequently, so keep it after dependencies.
+# ----------------------------
+COPY . .
+
+# Default environment variable (runtime can override it)
+ENV PORT=8000
+
+# Document the internal container port.
 EXPOSE 8000
 
-# Start the FastAPI application using Uvicorn when the container launches.
-# "app:app" refers to app.py (file) and app (FastAPI instance).
-# Host 0.0.0.0 ensures the API is accessible outside the container.
+# Start FastAPI app with Uvicorn.
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
