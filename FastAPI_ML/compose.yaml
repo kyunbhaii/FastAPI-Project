@@ -1,0 +1,14 @@
+name: my-ml-app
+
+services:
+  fastapi-ml-app:
+    build: .
+    container_name: fastapi-app-v1
+    environment:
+      - PORT=8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - type: bind
+        source: ./audit
+        target: /app/audit
