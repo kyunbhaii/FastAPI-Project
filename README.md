@@ -41,25 +41,7 @@ A full-stack ML application combining FastAPI backend with Streamlit frontend fo
 ```
 FastAPI-Project/
 │
-├── FastAPI ML/
-│   ├── config/
-│   │   └── city_tier.py
-│   │
-│   ├── model/
-│   │   ├── model.pkl
-│   │   └── predict.py
-│   │
-│   ├── schema/
-│   │   ├── user_input.py
-│   │   └── prediction_response.py
-│   │
-│   ├── app.py
-│   ├── frontend.py
-│   ├── ML_Model.ipynb
-│   ├── insurance.csv
-│   ├── requirements.txt
-│   └── README.md
-│
+├── FastAPI_ML/
 ├── main.py
 ├── patients.json
 ├── requirements.txt
