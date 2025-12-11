@@ -1,8 +1,11 @@
 # frontend.py
+import os
 import streamlit as st
 import requests
 
-API_URL = "http://127.0.0.1:8000/predict"
+# Read API base URL from environment; default to service name 'app' (Compose DNS)
+API_BASE = os.getenv("API_URL", "http://app:8000")
+PREDICT_ENDPOINT = f"{API_BASE.rstrip('/')}/predict"  # ensure single slash
 
 st.title("Insurance Premium Category Predictor")
 st.markdown("Enter your details below:")
@@ -38,14 +41,16 @@ if st.button("Predict Premium Category"):
     }
 
     try:
-        response = requests.post(API_URL, json=input_data)
+        response = requests.post(PREDICT_ENDPOINT, json=input_data, timeout=10)
     except requests.exceptions.ConnectionError:
-        st.error("❌ Could not connect to the FastAPI server. Make sure it's running on port 8000.")
+        st.error(f"❌ Could not connect to the FastAPI server at {PREDICT_ENDPOINT}. Make sure it's reachable from this container.")
+    except requests.exceptions.Timeout:
+        st.error(f"❌ Request to {PREDICT_ENDPOINT} timed out.")
     else:
         # Try parse JSON
         try:
             result = response.json()
-        except Exception as e:
+        except Exception:
             st.error("Invalid JSON response from API.")
             st.write(response.text)
         else:
@@ -54,7 +59,6 @@ if st.button("Predict Premium Category"):
                 if isinstance(result, dict) and "predicted_category" in result:
                     pred = result["predicted_category"]
                     st.success(f"Predicted Insurance Premium Category: **{pred}**")
-
                 else:
                     st.error("API returned 200 but response shape was unexpected.")
                     st.write(result)
