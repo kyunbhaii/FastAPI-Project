@@ -36,15 +36,16 @@ FastAPI ML/
 │   ├── user_input.py
 │   └── prediction_response.py
 │
-├── app.py
-├── frontend.py
-├── Dockerfile
-├── Dockerfile-slim
-├── ML_Model.ipynb
-├── insurance.csv
 ├── .env
-├── requirements.txt
-└── README.md
+├── app.py
+├── compose.yaml
+├── Dockerfile
+├── Dockerfile-old
+├── frontend.py
+├── insurance.csv
+├── ML_Model.ipynb
+├── README.md
+└── requirements.txt
 ```
 
 ---
